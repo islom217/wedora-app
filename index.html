@@ -226,6 +226,7 @@ function openVenue(id, keep) {
   $('#detail').innerHTML = `<div class="hero"><img src="${img(v)}" alt="" onerror="this.style.display='none'"><button class="close" id="dClose">✕</button></div>
    <div class="body">
     <h2>${esc(v.name)}</h2>${v.name_ru && v.name_ru !== v.name ? `<div class="ru">${esc(v.name_ru)}</div>` : ''}
+    ${v.warning ? `<div class="price" style="color:#fda4af">⚠️ ${esc(v.warning)}</div>` : ''}
     <div class="btns">
       ${v.phone ? `<a class="btn gold" href="${telHref(v)}">☎️ Qo'ng'iroq</a>` : ''}
       <button class="btn" data-url="https://yandex.uz/maps/?rtext=~${v.lat},${v.lon}&rtt=auto">🧭 Yo'l</button>
