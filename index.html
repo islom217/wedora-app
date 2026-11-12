@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Wedora</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800;900&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#140b10;--card:#21141b;--line:rgba(232,190,95,.22);--gold:#f3cf7a;--rose:#e89a8c;--text:#f7eee9;--muted:#bba49a;--ok:#86efac}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:Montserrat,system-ui,sans-serif}
+body{min-height:100vh;padding-bottom:84px;background:radial-gradient(600px 400px at 100% 0%,#5a1c38 0%,transparent 60%),radial-gradient(500px 400px at 0% 100%,#4a3510 0%,transparent 60%),var(--bg);background-attachment:fixed}
+header{padding:18px 16px 8px;display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));display:flex;align-items:center;justify-content:center;font-size:20px}
+header h1{font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);font-weight:900}
+header small{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-top:2px}
+.view{display:none;padding:8px 16px}.view.on{display:block}
+.search{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:600 15px Montserrat;outline:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);font:700 13px Montserrat;cursor:pointer}
+.chip.on{background:linear-gradient(135deg,var(--gold),var(--rose));color:#2a1410;border-color:transparent}
+.near{margin-top:8px;width:100%;padding:12px;border-radius:14px;border:1px dashed var(--gold);background:transparent;color:var(--gold);font:800 14px Montserrat;cursor:pointer}
+.count{color:var(--muted);font-size:13px;font-weight:600;margin:12px 2px 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.card h3{font-family:'Playfair Display',serif;font-size:21px;font-weight:800}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.meta span{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.06);color:#ead9d0}
+.meta .dist{background:rgba(134,239,172,.12);color:var(--ok)}
+.addr{color:var(--muted);font-size:14px;font-weight:500;line-height:1.4}
+.price{margin-top:8px;font-size:13px;color:var(--gold);font-weight:700}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{flex:1 1 auto;min-width:96px;text-align:center;padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:700 13px Montserrat;cursor:pointer;text-decoration:none}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--rose));color:#2a1410;border:0}
+#map{height:calc(100vh - 170px);border-radius:18px;border:1px solid var(--line);overflow:hidden}
+.leaflet-popup-content-wrapper{background:var(--card);color:var(--text);border-radius:14px}
+.leaflet-popup-tip{background:var(--card)}.leaflet-popup-content b{font-family:'Playfair Display',serif;font-size:16px}
+.pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:linear-gradient(135deg,var(--gold),var(--rose));border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.5)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px}
+.box h2{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--muted);font-weight:700;margin:14px 0 6px}
+input[type=range]{width:100%;accent-color:#f3cf7a}
+.val{font-size:18px;font-weight:800;color:var(--gold)}
+.total{margin-top:16px;padding:16px;border-radius:14px;background:rgba(243,207,122,.1);border:1px solid var(--line)}
+.total b{display:block;font-size:26px;color:var(--gold);margin-top:4px}
+.note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4}
+input[type=date]{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:700 15px Montserrat;color-scheme:dark}
+.big{font-family:'Playfair Display',serif;font-size:64px;color:var(--gold);text-align:center;margin-top:16px;line-height:1}
+.bigsub{text-align:center;color:var(--muted);font-weight:700;margin-top:6px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,11,16,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:var(--muted);font:700 11px Montserrat;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px}
+nav button i{font-style:normal;font-size:20px}nav button.on{color:var(--gold)}
+.empty{text-align:center;color:var(--muted);padding:40px 0;font-weight:600}
+</style>
+</head>
+<body>
+<header><div class="logo">💍</div><div><h1>Wedora</h1><small>Toshkentdagi to'yxonalar · ochiq manbalardan</small></div></header>
+
+<section class="view on" id="v-list">
+  <input class="search" id="q" placeholder="🔎 Nomi yoki manzil bo'yicha qidirish">
+  <div class="chips" id="chips"></div>
+  <button class="near" id="nearBtn">📍 Menga eng yaqinlarini ko'rsat</button>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+</section>
+
+<section class="view" id="v-map"><div id="map"></div></section>
+
+<section class="view" id="v-budget">
+  <div class="box"><h2>🧮 To'y byudjeti</h2>
+    <label>Mehmonlar soni: <span class="val" id="gV">300</span></label>
+    <input type="range" id="g" min="50" max="800" step="10" value="300">
+    <label>Bir kishilik menyu: <span class="val" id="pV">300 000</span> so'm</label>
+    <input type="range" id="p" min="100000" max="800000" step="10000" value="300000">
+    <label>Zal ijarasi (taxminiy): <span class="val" id="hV">10 000 000</span> so'm</label>
+    <input type="range" id="h" min="0" max="40000000" step="500000" value="10000000">
+    <label>Boshqa xarajatlar (bezak, musiqa, foto/video): <span class="val" id="oV">15 000 000</span> so'm</label>
+    <input type="range" id="o" min="0" max="80000000" step="1000000" value="15000000">
+    <div class="total">Taxminiy jami<b id="tot"></b><span id="per" class="note"></span></div>
+    <div class="note">Bu sizning tanlovingiz asosidagi hisob, biror to'yxonaning narxi emas. Aniq narxni to'yxonadan so'rang.</div>
+  </div>
+</section>
+
+<section class="view" id="v-count">
+  <div class="box"><h2>⏳ To'yga necha kun?</h2>
+    <label>To'y sanasi</label><input type="date" id="wd">
+    <div class="big" id="days">—</div><div class="bigsub" id="daysSub">Sanani tanlang</div>
+  </div>
+  <div class="box"><h2>💼 To'yxona egasimisiz?</h2>
+    <div class="note" style="font-size:14px;color:#ead9d0">To'yxonangizni Wedora hamkori qiling: bo'sh sanalar kalendari, bron so'rovlari va ko'rishlar statistikasi.</div>
+    <div class="btns"><button class="btn gold" id="partnerBtn">🤝 Hamkor bo'lish</button></div>
+  </div>
+</section>
+
+<nav>
+  <button class="on" data-v="list"><i>💒</i>To'yxonalar</button>
+  <button data-v="map"><i>🗺</i>Xarita</button>
+  <button data-v="budget"><i>🧮</i>Byudjet</button>
+  <button data-v="count"><i>⏳</i>Sanoq</button>
+</nav>
+
+<script>
+const tg = window.Telegram && Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#140b10'); tg.setBackgroundColor('#140b10'); } catch (e) {} }
+const BOT = 'Wedding_daBot';
+let VENUES = [], district = 'Hammasi', userPos = null, map = null;
+const $ = s => document.querySelector(s);
+const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/,/g, ' ');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const open = url => tg ? tg.openLink(url) : window.open(url, '_blank');
+const km = (a, b, c, d) => { const r = 6371, p = Math.PI / 180, x = Math.sin((c - a) * p / 2) ** 2 + Math.cos(a * p) * Math.cos(c * p) * Math.sin((d - b) * p / 2) ** 2; return 2 * r * Math.asin(Math.sqrt(x)); };
+const haptic = () => { try { tg && tg.HapticFeedback.selectionChanged(); } catch (e) {} };
+
+function card(v) {
+  const d = userPos && v.lat ? km(userPos[0], userPos[1], v.lat, v.lon) : null;
+  const ig = v.instagram ? `<button class="btn" data-open="https://instagram.com/${esc(v.instagram.replace('@',''))}">📸 Instagram</button>` : '';
+  const site = v.website ? `<button class="btn" data-open="${esc(v.website.startsWith('http') ? v.website : 'https://' + v.website)}">🌐 Sayt</button>` : '';
+  const tel = v.phone ? `<a class="btn gold" href="tel:${esc(v.phone.replace(/[^+\d]/g,''))}">☎️ Qo'ng'iroq</a>` : '';
+  return `<div class="card">
+    <h3>${esc(v.name)}</h3>
+    <div class="meta">${v.district ? `<span>📍 ${esc(v.district)}</span>` : ''}${v.capacity ? `<span>👥 ${v.capacity} kishigacha</span>` : ''}${d !== null ? `<span class="dist">🚗 ${d.toFixed(1)} km</span>` : ''}</div>
+    <div class="addr">${esc(v.address || '')}</div>
+    ${v.price_note ? `<div class="price">💰 ${esc(v.price_note)}</div>` : ''}
+    <div class="btns">${tel}<button class="btn" data-map="${esc(v.id)}">🗺 Xaritada</button>
+      <button class="btn" data-open="https://yandex.uz/maps/?rtext=~${v.lat},${v.lon}&rtt=auto">🧭 Yo'l</button>${ig}${site}</div>
+  </div>`;
+}
+
+function render() {
+  const q = $('#q').value.trim().toLowerCase();
+  let list = VENUES.filter(v => (district === 'Hammasi' || v.district === district) &&
+    (!q || (v.name + ' ' + (v.name_ru || '') + ' ' + (v.address || '') + ' ' + (v.district || '')).toLowerCase().includes(q)));
+  if (userPos) list.sort((a, b) => km(userPos[0], userPos[1], a.lat, a.lon) - km(userPos[0], userPos[1], b.lat, b.lon));
+  else list.sort((a, b) => a.name.localeCompare(b.name));
+  $('#count').textContent = `${list.length} ta to'yxona` + (userPos ? ' · yaqinlik bo\'yicha' : '');
+  $('#list').innerHTML = list.length ? list.map(card).join('') : '<div class="empty">Hech narsa topilmadi</div>';
+}
+
+function chips() {
+  const ds = ['Hammasi', ...[...new Set(VENUES.map(v => v.district).filter(Boolean))].sort()];
+  $('#chips').innerHTML = ds.map(d => `<button class="chip ${d === district ? 'on' : ''}" data-d="${esc(d)}">${esc(d)}</button>`).join('');
+}
+
+function initMap(focusId) {
+  if (!map) {
+    map = L.map('map', { zoomControl: false }).setView([41.3, 69.25], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+    const icon = L.divIcon({ className: '', html: '<div class="pin"></div>', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+    VENUES.forEach(v => {
+      if (!v.lat) return;
+      v._m = L.marker([v.lat, v.lon], { icon }).addTo(map).bindPopup(
+        `<b>${esc(v.name)}</b><br>${esc(v.address || '')}${v.capacity ? `<br>👥 ${v.capacity} kishigacha` : ''}` +
+        (v.phone ? `<br>☎️ <a href="tel:${esc(v.phone.replace(/[^+\d]/g,''))}" style="color:#f3cf7a">${esc(v.phone)}</a>` : ''));
+    });
+  }
+  setTimeout(() => {
+    map.invalidateSize();
+    const v = VENUES.find(x => x.id === focusId);
+    if (v && v._m) { map.setView([v.lat, v.lon], 16); v._m.openPopup(); }
+  }, 60);
+}
+
+function show(view, focusId) {
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'v-' + view));
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
+  if (view === 'map') initMap(focusId);
+  window.scrollTo(0, 0); haptic();
+}
+
+function budget() {
+  const g = +$('#g').value, p = +$('#p').value, h = +$('#h').value, o = +$('#o').value;
+  $('#gV').textContent = g; $('#pV').textContent = fmt(p); $('#hV').textContent = fmt(h); $('#oV').textContent = fmt(o);
+  const t = g * p + h + o;
+  $('#tot').textContent = fmt(t) + " so'm";
+  $('#per').textContent = `Bir mehmonga ~${fmt(t / g)} so'm`;
+}
+
+function storeGet(k, cb) { try { if (tg && tg.CloudStorage) return tg.CloudStorage.getItem(k, (e, v) => cb(v || localStorage.getItem(k))); } catch (e) {} try { cb(localStorage.getItem(k)); } catch (e) { cb(null); } }
+function storeSet(k, v) { try { tg && tg.CloudStorage && tg.CloudStorage.setItem(k, v); } catch (e) {} try { localStorage.setItem(k, v); } catch (e) {} }
+function countdown() {
+  const v = $('#wd').value; if (!v) return;
+  const left = Math.ceil((new Date(v + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000);
+  $('#days').textContent = left > 0 ? left : (left === 0 ? '🎉' : '💍');
+  $('#daysSub').textContent = left > 0 ? 'kun qoldi' : (left === 0 ? "To'yingiz bugun! Baxtli bo'linglar!" : "To'yingiz bo'lib o'tdi. Baxtli bo'linglar!");
+}
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-open],[data-map],[data-d],nav button');
+  if (!t) return;
+  if (t.dataset.open) open(t.dataset.open);
+  else if (t.dataset.map) show('map', t.dataset.map);
+  else if (t.dataset.d) { district = t.dataset.d; chips(); render(); haptic(); }
+  else if (t.dataset.v) show(t.dataset.v);
+});
+$('#q').addEventListener('input', render);
+['g', 'p', 'h', 'o'].forEach(id => $('#' + id).addEventListener('input', budget));
+$('#wd').addEventListener('change', () => { storeSet('wedding_date', $('#wd').value); countdown(); });
+$('#partnerBtn').addEventListener('click', () => { const u = `https://t.me/${BOT}?start=partner`; tg ? tg.openTelegramLink(u) : open(u); });
+$('#nearBtn').addEventListener('click', () => {
+  const done = (lat, lon) => { userPos = [lat, lon]; $('#nearBtn').textContent = '📍 Yaqinlik bo\'yicha saralandi'; render(); };
+  const fail = () => { $('#nearBtn').textContent = '📍 Joylashuvga ruxsat berilmadi'; };
+  try {
+    if (tg && tg.LocationManager) {
+      tg.LocationManager.init(() => {
+        if (tg.LocationManager.isLocationAvailable) tg.LocationManager.getLocation(l => l ? done(l.latitude, l.longitude) : fail());
+        else navigator.geolocation.getCurrentPosition(p => done(p.coords.latitude, p.coords.longitude), fail);
+      });
+      return;
+    }
+  } catch (e) {}
+  navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => done(p.coords.latitude, p.coords.longitude), fail) : fail();
+});
+
+fetch('venues.json').then(r => r.json()).then(d => { VENUES = d; chips(); render(); }).catch(() => { $('#list').innerHTML = '<div class="empty">Ma\'lumot yuklanmadi</div>'; });
+budget();
+storeGet('wedding_date', v => { if (v) { $('#wd').value = v; countdown(); } });
+</script>
+</body>
+</html>
