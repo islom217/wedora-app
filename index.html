@@ -3,7 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>Wedora</title>
+<title>Wedora — Toshkentdagi to'yxonalar</title>
+<meta name="description" content="Toshkentdagi 30 ta to'yxona: manzil, xarita, telefon, Instagram. To'y byudjeti kalkulyatori va to'ygacha sanoq.">
+<meta property="og:title" content="Wedora — Toshkentdagi to'yxonalar">
+<meta property="og:description" content="To'yxonangizni bir joyda toping: xarita, telefon, Instagram, byudjet kalkulyatori.">
+<meta property="og:image" content="https://islom217.github.io/wedora-app/images/welcome.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#140b10">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -13,30 +20,39 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--text);font-family:Montserrat,system-ui,sans-serif}
 body{min-height:100vh;padding-bottom:84px;background:radial-gradient(600px 400px at 100% 0%,#5a1c38 0%,transparent 60%),radial-gradient(500px 400px at 0% 100%,#4a3510 0%,transparent 60%),var(--bg);background-attachment:fixed}
+.wrap{max-width:720px;margin:0 auto}
 header{padding:18px 16px 8px;display:flex;align-items:center;gap:10px}
-.logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
 header h1{font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);font-weight:900}
 header small{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-top:2px}
+.tgbar{display:none;margin:4px 16px 8px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,#2aabee,#229ed9);color:#fff;font-weight:800;font-size:14px;text-decoration:none;align-items:center;justify-content:space-between;gap:10px}
+.tgbar.on{display:flex}
 .view{display:none;padding:8px 16px}.view.on{display:block}
 .search{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:600 15px Montserrat;outline:none}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);font:700 13px Montserrat;cursor:pointer}
 .chip.on{background:linear-gradient(135deg,var(--gold),var(--rose));color:#2a1410;border-color:transparent}
-.near{margin-top:8px;width:100%;padding:12px;border-radius:14px;border:1px dashed var(--gold);background:transparent;color:var(--gold);font:800 14px Montserrat;cursor:pointer}
+.row2{display:flex;gap:8px;margin-top:8px}
+.near{flex:1;padding:12px;border-radius:14px;border:1px dashed var(--gold);background:transparent;color:var(--gold);font:800 13px Montserrat;cursor:pointer}
 .count{color:var(--muted);font-size:13px;font-weight:600;margin:12px 2px 8px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
-.card h3{font-family:'Playfair Display',serif;font-size:21px;font-weight:800}
-.meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:12px;cursor:pointer}
+.card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#2a1820}
+.card .in{padding:14px 16px 16px;position:relative}
+.card h3{font-family:'Playfair Display',serif;font-size:21px;font-weight:800;padding-right:44px}
+.fav{position:absolute;right:12px;top:10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,.25);font-size:18px;cursor:pointer;color:var(--text)}
+.fav.on{background:rgba(232,154,140,.25);border-color:var(--rose)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 6px}
 .meta span{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.06);color:#ead9d0}
 .meta .dist{background:rgba(134,239,172,.12);color:var(--ok)}
 .addr{color:var(--muted);font-size:14px;font-weight:500;line-height:1.4}
 .price{margin-top:8px;font-size:13px;color:var(--gold);font-weight:700}
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.btn{flex:1 1 auto;min-width:96px;text-align:center;padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:700 13px Montserrat;cursor:pointer;text-decoration:none}
+.btn{flex:1 1 auto;min-width:96px;text-align:center;padding:12px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:700 13px Montserrat;cursor:pointer;text-decoration:none}
 .btn.gold{background:linear-gradient(135deg,var(--gold),var(--rose));color:#2a1410;border:0}
 #map{height:calc(100vh - 170px);border-radius:18px;border:1px solid var(--line);overflow:hidden}
 .leaflet-popup-content-wrapper{background:var(--card);color:var(--text);border-radius:14px}
 .leaflet-popup-tip{background:var(--card)}.leaflet-popup-content b{font-family:'Playfair Display',serif;font-size:16px}
+.leaflet-popup-content a.more{display:inline-block;margin-top:8px;color:#2a1410;background:var(--gold);padding:6px 10px;border-radius:8px;font-weight:800;text-decoration:none}
 .pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:linear-gradient(135deg,var(--gold),var(--rose));border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.5)}
 .box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px}
 .box h2{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:12px}
@@ -45,26 +61,51 @@ input[type=range]{width:100%;accent-color:#f3cf7a}
 .val{font-size:18px;font-weight:800;color:var(--gold)}
 .total{margin-top:16px;padding:16px;border-radius:14px;background:rgba(243,207,122,.1);border:1px solid var(--line)}
 .total b{display:block;font-size:26px;color:var(--gold);margin-top:4px}
-.note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4}
+.note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.45}
 input[type=date]{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font:700 15px Montserrat;color-scheme:dark}
 .big{font-family:'Playfair Display',serif;font-size:64px;color:var(--gold);text-align:center;margin-top:16px;line-height:1}
 .bigsub{text-align:center;color:var(--muted);font-weight:700;margin-top:6px}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,11,16,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
-nav button{flex:1;background:none;border:0;color:var(--muted);font:700 11px Montserrat;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;background:rgba(20,11,16,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:1000}
+nav .in{display:flex;width:100%;max-width:720px}
+nav button{flex:1;background:none;border:0;color:var(--muted);font:700 11px Montserrat;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px;position:relative}
 nav button i{font-style:normal;font-size:20px}nav button.on{color:var(--gold)}
-.empty{text-align:center;color:var(--muted);padding:40px 0;font-weight:600}
+nav .badge{position:absolute;top:0;right:calc(50% - 22px);min-width:18px;height:18px;border-radius:9px;background:var(--rose);color:#2a1410;font-size:11px;line-height:18px;display:none}
+.empty{text-align:center;color:var(--muted);padding:40px 0;font-weight:600;line-height:1.5}
+/* To'liq sahifa */
+#detail{position:fixed;inset:0;z-index:2000;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .25s ease}
+#detail.on{transform:none}
+#detail .hero{position:relative}
+#detail .hero img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+#detail .close{position:absolute;left:12px;top:12px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:20px;cursor:pointer}
+#detail .body{padding:18px 16px 40px;max-width:720px;margin:0 auto}
+#detail h2{font-family:'Playfair Display',serif;font-size:30px;line-height:1.1}
+#detail .ru{color:var(--muted);font-weight:600;margin-top:4px}
+.info{margin-top:16px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.info div{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.info div:last-child{border-bottom:0}
+.info span{color:var(--muted);font-weight:600;flex:none}.info b{text-align:right;font-weight:700}
+#minimap{height:200px;border-radius:16px;margin-top:14px;border:1px solid var(--line)}
+.src{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5}
+.src a{color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:#2a1820;border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-weight:700;font-size:13px;z-index:3000;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
 </style>
 </head>
 <body>
+<div class="wrap">
 <header><div class="logo">💍</div><div><h1>Wedora</h1><small>Toshkentdagi to'yxonalar · ochiq manbalardan</small></div></header>
+<a class="tgbar" id="tgbar" href="https://t.me/Wedding_daBot">✈️ Telegramda ochish — @Wedding_daBot<span>›</span></a>
 
 <section class="view on" id="v-list">
   <input class="search" id="q" placeholder="🔎 Nomi yoki manzil bo'yicha qidirish">
   <div class="chips" id="chips"></div>
-  <button class="near" id="nearBtn">📍 Menga eng yaqinlarini ko'rsat</button>
+  <div class="chips" id="cap"></div>
+  <div class="row2"><button class="near" id="nearBtn">📍 Eng yaqinlari</button></div>
   <div class="count" id="count"></div>
   <div id="list"></div>
 </section>
+
+<section class="view" id="v-fav"><div class="count" id="favCount"></div><div id="favList"></div></section>
 
 <section class="view" id="v-map"><div id="map"></div></section>
 
@@ -80,92 +121,170 @@ nav button i{font-style:normal;font-size:20px}nav button.on{color:var(--gold)}
     <input type="range" id="o" min="0" max="80000000" step="1000000" value="15000000">
     <div class="total">Taxminiy jami<b id="tot"></b><span id="per" class="note"></span></div>
     <div class="note">Bu sizning tanlovingiz asosidagi hisob, biror to'yxonaning narxi emas. Aniq narxni to'yxonadan so'rang.</div>
+    <div class="btns"><button class="btn" id="fitBtn">👥 Shuncha mehmon sig'adigan zallar</button></div>
   </div>
-</section>
-
-<section class="view" id="v-count">
   <div class="box"><h2>⏳ To'yga necha kun?</h2>
     <label>To'y sanasi</label><input type="date" id="wd">
     <div class="big" id="days">—</div><div class="bigsub" id="daysSub">Sanani tanlang</div>
   </div>
   <div class="box"><h2>💼 To'yxona egasimisiz?</h2>
-    <div class="note" style="font-size:14px;color:#ead9d0">To'yxonangizni Wedora hamkori qiling: bo'sh sanalar kalendari, bron so'rovlari va ko'rishlar statistikasi.</div>
+    <div class="note" style="font-size:14px;color:#ead9d0">To'yxonangizni Wedora hamkori qiling: bo'sh sanalar kalendari, bron so'rovlari va ko'rishlar statistikasi. Ma'lumotingizda xato bo'lsa ham yozing — tuzatamiz.</div>
     <div class="btns"><button class="btn gold" id="partnerBtn">🤝 Hamkor bo'lish</button></div>
   </div>
 </section>
+</div>
 
-<nav>
+<div id="detail"></div>
+<div class="toast" id="toast"></div>
+
+<nav><div class="in">
   <button class="on" data-v="list"><i>💒</i>To'yxonalar</button>
   <button data-v="map"><i>🗺</i>Xarita</button>
+  <button data-v="fav"><i>♥</i>Saqlangan<span class="badge" id="favBadge"></span></button>
   <button data-v="budget"><i>🧮</i>Byudjet</button>
-  <button data-v="count"><i>⏳</i>Sanoq</button>
-</nav>
+</div></nav>
 
 <script>
-const tg = window.Telegram && Telegram.WebApp;
+const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initData !== undefined ? Telegram.WebApp : null;
+const inTG = !!(tg && tg.initData);
 if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#140b10'); tg.setBackgroundColor('#140b10'); } catch (e) {} }
-const BOT = 'Wedding_daBot';
-let VENUES = [], district = 'Hammasi', userPos = null, map = null;
+if (!inTG) document.getElementById('tgbar').classList.add('on');
+const BOT = 'Wedding_daBot', SITE = 'https://islom217.github.io/wedora-app/';
+let VENUES = [], district = 'Hammasi', minCap = 0, userPos = null, map = null, mini = null, favs = new Set(), current = null;
 const $ = s => document.querySelector(s);
-const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/,/g, ' ');
+const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/[\s,]/g, ' ');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const open = url => tg ? tg.openLink(url) : window.open(url, '_blank');
+const openUrl = url => tg && inTG ? tg.openLink(url) : window.open(url, '_blank');
+const openTg = url => tg && inTG ? tg.openTelegramLink(url) : window.open(url, '_blank');
 const km = (a, b, c, d) => { const r = 6371, p = Math.PI / 180, x = Math.sin((c - a) * p / 2) ** 2 + Math.cos(a * p) * Math.cos(c * p) * Math.sin((d - b) * p / 2) ** 2; return 2 * r * Math.asin(Math.sqrt(x)); };
-const haptic = () => { try { tg && tg.HapticFeedback.selectionChanged(); } catch (e) {} };
+const haptic = (t = 'sel') => { try { if (!inTG) return; t === 'sel' ? tg.HapticFeedback.selectionChanged() : tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
+const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 1800); };
+const img = v => `images/venue_${encodeURIComponent(v.id)}.jpg`;
+const telHref = v => 'tel:' + v.phone.replace(/[^+\d]/g, '');
 
+// Saqlash: Telegram CloudStorage (bor bo'lsa) + localStorage
+function storeGet(k, cb) { let done = false; const fin = v => { if (!done) { done = true; cb(v); } };
+  try { if (inTG && tg.CloudStorage) { tg.CloudStorage.getItem(k, (e, v) => fin(v || safeLS(k))); setTimeout(() => fin(safeLS(k)), 1500); return; } } catch (e) {}
+  fin(safeLS(k)); }
+function safeLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function storeSet(k, v) { try { inTG && tg.CloudStorage && tg.CloudStorage.setItem(k, v); } catch (e) {} try { localStorage.setItem(k, v); } catch (e) {} }
+
+function favBtn(v) { return `<button class="fav ${favs.has(v.id) ? 'on' : ''}" data-fav="${esc(v.id)}" aria-label="Saqlash">${favs.has(v.id) ? '♥' : '♡'}</button>`; }
 function card(v) {
   const d = userPos && v.lat ? km(userPos[0], userPos[1], v.lat, v.lon) : null;
-  const ig = v.instagram ? `<button class="btn" data-open="https://instagram.com/${esc(v.instagram.replace('@',''))}">📸 Instagram</button>` : '';
-  const site = v.website ? `<button class="btn" data-open="${esc(v.website.startsWith('http') ? v.website : 'https://' + v.website)}">🌐 Sayt</button>` : '';
-  const tel = v.phone ? `<a class="btn gold" href="tel:${esc(v.phone.replace(/[^+\d]/g,''))}">☎️ Qo'ng'iroq</a>` : '';
-  return `<div class="card">
-    <h3>${esc(v.name)}</h3>
-    <div class="meta">${v.district ? `<span>📍 ${esc(v.district)}</span>` : ''}${v.capacity ? `<span>👥 ${v.capacity} kishigacha</span>` : ''}${d !== null ? `<span class="dist">🚗 ${d.toFixed(1)} km</span>` : ''}</div>
-    <div class="addr">${esc(v.address || '')}</div>
-    ${v.price_note ? `<div class="price">💰 ${esc(v.price_note)}</div>` : ''}
-    <div class="btns">${tel}<button class="btn" data-map="${esc(v.id)}">🗺 Xaritada</button>
-      <button class="btn" data-open="https://yandex.uz/maps/?rtext=~${v.lat},${v.lon}&rtt=auto">🧭 Yo'l</button>${ig}${site}</div>
-  </div>`;
+  return `<div class="card" data-open-v="${esc(v.id)}">
+    <img loading="lazy" src="${img(v)}" alt="${esc(v.name)}" onerror="this.remove()">
+    <div class="in">${favBtn(v)}
+      <h3>${esc(v.name)}</h3>
+      <div class="meta">${v.district ? `<span>📍 ${esc(v.district)}</span>` : ''}${v.capacity ? `<span>👥 ${v.capacity} kishigacha</span>` : ''}${d !== null ? `<span class="dist">🚗 ${d.toFixed(1)} km</span>` : ''}</div>
+      <div class="addr">${esc(v.address || '')}</div>
+    </div></div>`;
 }
 
-function render() {
+function filtered() {
   const q = $('#q').value.trim().toLowerCase();
-  let list = VENUES.filter(v => (district === 'Hammasi' || v.district === district) &&
+  let list = VENUES.filter(v => (district === 'Hammasi' || v.district === district) && (!minCap || (v.capacity && v.capacity >= minCap)) &&
     (!q || (v.name + ' ' + (v.name_ru || '') + ' ' + (v.address || '') + ' ' + (v.district || '')).toLowerCase().includes(q)));
   if (userPos) list.sort((a, b) => km(userPos[0], userPos[1], a.lat, a.lon) - km(userPos[0], userPos[1], b.lat, b.lon));
   else list.sort((a, b) => a.name.localeCompare(b.name));
-  $('#count').textContent = `${list.length} ta to'yxona` + (userPos ? ' · yaqinlik bo\'yicha' : '');
-  $('#list').innerHTML = list.length ? list.map(card).join('') : '<div class="empty">Hech narsa topilmadi</div>';
+  return list;
 }
-
+function render() {
+  const list = filtered();
+  $('#count').textContent = `${list.length} ta to'yxona` + (minCap ? ` · ${minCap}+ kishi` : '') + (userPos ? ' · yaqinlik bo\'yicha' : '');
+  $('#list').innerHTML = list.length ? list.map(card).join('') :
+    `<div class="empty">Hech narsa topilmadi${minCap ? `<br><small>Sig'imi e'lon qilinmagan zallar bu filtrda ko'rinmaydi</small>` : ''}</div>`;
+}
+function renderFav() {
+  const list = VENUES.filter(v => favs.has(v.id));
+  $('#favCount').textContent = list.length ? `${list.length} ta saqlangan to'yxona` : '';
+  $('#favList').innerHTML = list.length ? list.map(card).join('') : '<div class="empty">♡ belgisini bosib, yoqqan to\'yxonalarni shu yerga saqlang.<br>Keyin oila bilan solishtirasiz.</div>';
+  const b = $('#favBadge'); b.textContent = favs.size; b.style.display = favs.size ? 'block' : 'none';
+}
 function chips() {
   const ds = ['Hammasi', ...[...new Set(VENUES.map(v => v.district).filter(Boolean))].sort()];
   $('#chips').innerHTML = ds.map(d => `<button class="chip ${d === district ? 'on' : ''}" data-d="${esc(d)}">${esc(d)}</button>`).join('');
+  $('#cap').innerHTML = [0, 250, 350, 450, 550].map(c => `<button class="chip ${c === minCap ? 'on' : ''}" data-cap="${c}">${c ? `👥 ${c}+` : '👥 Har qanday'}</button>`).join('');
 }
 
-function initMap(focusId) {
+function toggleFav(id) {
+  favs.has(id) ? favs.delete(id) : favs.add(id);
+  storeSet('favs', JSON.stringify([...favs])); haptic('success');
+  toast(favs.has(id) ? '♥ Saqlandi' : 'Olib tashlandi');
+  render(); renderFav(); if (current === id) openVenue(id, true);
+}
+
+function openVenue(id, keep) {
+  const v = VENUES.find(x => x.id === id); if (!v) return;
+  current = id;
+  const d = userPos && v.lat ? km(userPos[0], userPos[1], v.lat, v.lon) : null;
+  const rows = [
+    ['Tuman', v.district], ['Manzil', v.address], ['Sig\'imi', v.capacity ? v.capacity + ' kishigacha' : 'ma\'lumot yo\'q'],
+    ['Narx', v.price_note || 'to\'yxonaning o\'zidan so\'rang'], ['Telefon', v.phone || 'ma\'lumot yo\'q'], d !== null ? ['Masofa', d.toFixed(1) + ' km'] : null
+  ].filter(Boolean);
+  const src = (v.source_urls || []).slice(0, 3).map((u, i) => `<a href="#" data-url="${esc(u)}">manba ${i + 1}</a>`).join(' · ');
+  $('#detail').innerHTML = `<div class="hero"><img src="${img(v)}" alt="" onerror="this.style.display='none'"><button class="close" id="dClose">✕</button></div>
+   <div class="body">
+    <h2>${esc(v.name)}</h2>${v.name_ru && v.name_ru !== v.name ? `<div class="ru">${esc(v.name_ru)}</div>` : ''}
+    <div class="btns">
+      ${v.phone ? `<a class="btn gold" href="${telHref(v)}">☎️ Qo'ng'iroq</a>` : ''}
+      <button class="btn" data-url="https://yandex.uz/maps/?rtext=~${v.lat},${v.lon}&rtt=auto">🧭 Yo'l</button>
+      <button class="btn ${favs.has(v.id) ? 'gold' : ''}" data-fav="${esc(v.id)}">${favs.has(v.id) ? '♥ Saqlangan' : '♡ Saqlash'}</button>
+    </div>
+    <div class="info">${rows.map(([k, val]) => `<div><span>${esc(k)}</span><b>${esc(val)}</b></div>`).join('')}</div>
+    <div id="minimap"></div>
+    <div class="btns">
+      ${v.instagram ? `<button class="btn" data-url="https://instagram.com/${esc(v.instagram.replace('@', ''))}">📸 Instagram</button>` : ''}
+      ${v.website ? `<button class="btn" data-url="${esc(v.website.startsWith('http') ? v.website : 'https://' + v.website)}">🌐 Sayt</button>` : ''}
+      <button class="btn" id="dShare">📤 Ulashish</button>
+      <button class="btn" id="dErr">⚠️ Xato bor</button>
+    </div>
+    <div class="src">Ma'lumot ochiq manbalardan olingan va tekshirilgan (${esc(v.checked || '2026')}). Narx va bo'sh sanalarni to'yxonaning o'zidan aniqlang.${src ? '<br>' + src : ''}</div>
+   </div>`;
+  $('#detail').classList.add('on'); if (!keep) $('#detail').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  if (inTG) { tg.BackButton.show(); }
+  setTimeout(() => {
+    if (!v.lat) return;
+    if (mini) { mini.remove(); mini = null; }
+    mini = L.map('minimap', { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false }).setView([v.lat, v.lon], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mini);
+    L.marker([v.lat, v.lon], { icon: L.divIcon({ className: '', html: '<div class="pin"></div>', iconSize: [30, 30], iconAnchor: [15, 30] }) }).addTo(mini);
+  }, 260);
+  $('#dClose').onclick = closeVenue;
+  $('#dShare').onclick = () => shareVenue(v);
+  $('#dErr').onclick = () => openTg(`https://t.me/${BOT}?start=err_${v.id}`);
+  haptic();
+}
+function closeVenue() { $('#detail').classList.remove('on'); document.body.style.overflow = ''; current = null; if (inTG) tg.BackButton.hide(); }
+function shareVenue(v) {
+  const link = `https://t.me/${BOT}?start=v_${v.id}`;
+  const text = `💍 ${v.name} — ${v.address || ''}${v.capacity ? ', ' + v.capacity + ' kishigacha' : ''}. Wedora'da ko'ring:`;
+  const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+  if (!inTG && navigator.share) { navigator.share({ title: v.name, text, url: link }).catch(() => {}); return; }
+  openTg(url);
+}
+
+function initMap() {
   if (!map) {
     map = L.map('map', { zoomControl: false }).setView([41.3, 69.25], 11);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
     const icon = L.divIcon({ className: '', html: '<div class="pin"></div>', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
     VENUES.forEach(v => {
       if (!v.lat) return;
-      v._m = L.marker([v.lat, v.lon], { icon }).addTo(map).bindPopup(
-        `<b>${esc(v.name)}</b><br>${esc(v.address || '')}${v.capacity ? `<br>👥 ${v.capacity} kishigacha` : ''}` +
-        (v.phone ? `<br>☎️ <a href="tel:${esc(v.phone.replace(/[^+\d]/g,''))}" style="color:#f3cf7a">${esc(v.phone)}</a>` : ''));
+      L.marker([v.lat, v.lon], { icon }).addTo(map).bindPopup(
+        `<b>${esc(v.name)}</b><br>${esc(v.address || '')}${v.capacity ? `<br>👥 ${v.capacity} kishigacha` : ''}<br><a class="more" href="#" data-open-v="${esc(v.id)}">Batafsil ›</a>`);
     });
   }
-  setTimeout(() => {
-    map.invalidateSize();
-    const v = VENUES.find(x => x.id === focusId);
-    if (v && v._m) { map.setView([v.lat, v.lon], 16); v._m.openPopup(); }
-  }, 60);
+  setTimeout(() => map.invalidateSize(), 60);
 }
 
-function show(view, focusId) {
+function show(view) {
+  closeVenue();
   document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'v-' + view));
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
-  if (view === 'map') initMap(focusId);
+  if (view === 'map') initMap();
+  if (view === 'fav') renderFav();
   window.scrollTo(0, 0); haptic();
 }
 
@@ -176,9 +295,6 @@ function budget() {
   $('#tot').textContent = fmt(t) + " so'm";
   $('#per').textContent = `Bir mehmonga ~${fmt(t / g)} so'm`;
 }
-
-function storeGet(k, cb) { try { if (tg && tg.CloudStorage) return tg.CloudStorage.getItem(k, (e, v) => cb(v || localStorage.getItem(k))); } catch (e) {} try { cb(localStorage.getItem(k)); } catch (e) { cb(null); } }
-function storeSet(k, v) { try { tg && tg.CloudStorage && tg.CloudStorage.setItem(k, v); } catch (e) {} try { localStorage.setItem(k, v); } catch (e) {} }
 function countdown() {
   const v = $('#wd').value; if (!v) return;
   const left = Math.ceil((new Date(v + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000);
@@ -187,34 +303,36 @@ function countdown() {
 }
 
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-open],[data-map],[data-d],nav button');
-  if (!t) return;
-  if (t.dataset.open) open(t.dataset.open);
-  else if (t.dataset.map) show('map', t.dataset.map);
-  else if (t.dataset.d) { district = t.dataset.d; chips(); render(); haptic(); }
+  const f = e.target.closest('[data-fav]'); if (f) { e.stopPropagation(); e.preventDefault(); toggleFav(f.dataset.fav); return; }
+  const u = e.target.closest('[data-url]'); if (u) { e.preventDefault(); openUrl(u.dataset.url); return; }
+  const o = e.target.closest('[data-open-v]'); if (o) { e.preventDefault(); openVenue(o.dataset.openV); return; }
+  const t = e.target.closest('[data-d],[data-cap],nav button'); if (!t) return;
+  if (t.dataset.d) { district = t.dataset.d; chips(); render(); haptic(); }
+  else if (t.dataset.cap !== undefined) { minCap = +t.dataset.cap; chips(); render(); haptic(); }
   else if (t.dataset.v) show(t.dataset.v);
 });
 $('#q').addEventListener('input', render);
 ['g', 'p', 'h', 'o'].forEach(id => $('#' + id).addEventListener('input', budget));
+$('#fitBtn').addEventListener('click', () => { minCap = +$('#g').value; chips(); show('list'); render(); });
 $('#wd').addEventListener('change', () => { storeSet('wedding_date', $('#wd').value); countdown(); });
-$('#partnerBtn').addEventListener('click', () => { const u = `https://t.me/${BOT}?start=partner`; tg ? tg.openTelegramLink(u) : open(u); });
+$('#partnerBtn').addEventListener('click', () => openTg(`https://t.me/${BOT}?start=partner`));
 $('#nearBtn').addEventListener('click', () => {
-  const done = (lat, lon) => { userPos = [lat, lon]; $('#nearBtn').textContent = '📍 Yaqinlik bo\'yicha saralandi'; render(); };
+  const done = (lat, lon) => { userPos = [lat, lon]; $('#nearBtn').textContent = '📍 Yaqinlik bo\'yicha saralandi'; render(); haptic('success'); };
   const fail = () => { $('#nearBtn').textContent = '📍 Joylashuvga ruxsat berilmadi'; };
-  try {
-    if (tg && tg.LocationManager) {
-      tg.LocationManager.init(() => {
-        if (tg.LocationManager.isLocationAvailable) tg.LocationManager.getLocation(l => l ? done(l.latitude, l.longitude) : fail());
-        else navigator.geolocation.getCurrentPosition(p => done(p.coords.latitude, p.coords.longitude), fail);
-      });
-      return;
-    }
-  } catch (e) {}
-  navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => done(p.coords.latitude, p.coords.longitude), fail) : fail();
+  const browser = () => navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => done(p.coords.latitude, p.coords.longitude), fail, { timeout: 10000 }) : fail();
+  try { if (inTG && tg.LocationManager) { tg.LocationManager.init(() => {
+      if (tg.LocationManager.isLocationAvailable) tg.LocationManager.getLocation(l => l ? done(l.latitude, l.longitude) : fail()); else browser(); }); return; } } catch (e) {}
+  browser();
 });
+if (tg) tg.BackButton.onClick(closeVenue);
 
-fetch('venues.json').then(r => r.json()).then(d => { VENUES = d; chips(); render(); }).catch(() => { $('#list').innerHTML = '<div class="empty">Ma\'lumot yuklanmadi</div>'; });
+fetch('venues.json').then(r => r.json()).then(d => {
+  VENUES = d; chips(); render(); renderFav();
+  const sp = (inTG && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || new URLSearchParams(location.search).get('v');
+  if (sp) openVenue(sp.replace(/^v_/, ''));
+}).catch(() => { $('#list').innerHTML = '<div class="empty">Ma\'lumot yuklanmadi. Internetni tekshiring.</div>'; });
 budget();
+storeGet('favs', v => { try { favs = new Set(JSON.parse(v || '[]')); } catch (e) {} render(); renderFav(); });
 storeGet('wedding_date', v => { if (v) { $('#wd').value = v; countdown(); } });
 </script>
 </body>
