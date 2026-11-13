@@ -32,7 +32,6 @@
   "instagram": "sarbon_banquet_hall",
   "website": "http://sarbon-restaurant.uz",
   "capacity": 400,
-  "price_note": "Menyu (rasmiy sayt): 500 000 / 600 000 / 750 000 so'm bir kishi uchun",
   "source_urls": [
    "https://2gis.uz/tashkent/firm/70000001037677258",
    "https://2gis.uz/tashkent/search/банкетный%20зал%20Мирзо-Улугбекский%20район",
@@ -40,7 +39,13 @@
   ],
   "notes": "2GIS card: 'До 400 человек'. Site: main hall up to 300 + small hall up to 100 (consistent with 400 total). Conflicts: house number 374a (2GIS) vs 368B (site); site phones +998 77 141 11 33 and +998 55 515 35 35 differ from 2GIS phone. Telegram t.me/sarbon_banquet_hall.",
   "checked": "noyabr 2026",
-  "partner": false
+  "partner": false,
+  "price_min": 500000,
+  "price_max": 750000,
+  "price_from": false,
+  "price_source": "http://sarbon-restaurant.uz",
+  "price_date": "noyabr 2026",
+  "price_detail": "Silver 500 ming, Gold 600 ming, Platinum 750 ming (rasmiy sayt)"
  },
  {
   "id": "renaissance",
@@ -82,7 +87,13 @@
   ],
   "notes": "2GIS: Gulobod (Ts-26) zh/m, Shaykhantakhur district, 100020. Capacity from 2GIS search card 'До 550 человек'.",
   "checked": "noyabr 2026",
-  "partner": false
+  "partner": false,
+  "price_min": 800000,
+  "price_max": null,
+  "price_from": true,
+  "price_source": "https://www.afisha.uz/uz/weddings/2026/10/28/toy-qilish-narxi",
+  "price_date": "oktabr 2026",
+  "price_detail": "Bazm menyusi bir kishi uchun 800 ming so'mdan (Afisha.uz)"
  },
  {
   "id": "shohsaroy",
@@ -561,7 +572,13 @@
   ],
   "notes": "Distinct from 'Visol' (Generala Uzakova 8a, Olmazor). 2GIS: 100156.",
   "checked": "noyabr 2026",
-  "partner": false
+  "partner": false,
+  "price_min": 200000,
+  "price_max": null,
+  "price_from": true,
+  "price_source": "https://www.afisha.uz/uz/weddings/2026/10/28/toy-qilish-narxi",
+  "price_date": "oktabr 2026",
+  "price_detail": "Bazm menyusi bir kishi uchun 200 ming so'mdan (Afisha.uz)"
  },
  {
   "id": "malika",
@@ -595,15 +612,22 @@
   "phone": "+998 94 109 07 70",
   "instagram": "anana_hall",
   "website": "https://anana-hall.uz",
-  "capacity": 300,
+  "capacity": "150",
   "price_note": null,
   "source_urls": [
    "https://2gis.uz/tashkent/firm/70000001040158317",
-   "https://2gis.uz/tashkent/search/банкетный%20зал%20Янгихаётский%20район"
+   "https://2gis.uz/tashkent/search/банкетный%20зал%20Янгихаётский%20район",
+   "https://anana-hall.uz/banquets"
   ],
   "notes": "2GIS links an Instagram named 'shedevr_restaurant...', which does not match the venue name - verify before publishing. 'Samsa markazi' is listed at the same address on 2GIS.",
   "checked": "noyabr 2026",
-  "partner": false
+  "partner": false,
+  "price_min": 300000,
+  "price_max": 450000,
+  "price_from": false,
+  "price_source": "https://anana-hall.uz/banquets",
+  "price_date": "noyabr 2026",
+  "price_detail": "Dasturxon 300 ming, Yevropacha 350 ming, Shoh 450 ming; +10% xizmat haqi (rasmiy sayt)"
  },
  {
   "id": "iqbol",

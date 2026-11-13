@@ -153,6 +153,9 @@ const BOT = 'Wedding_daBot', SITE = 'https://islom217.github.io/wedora-app/';
 let VENUES = [], district = 'Hammasi', minCap = 0, userPos = null, map = null, mini = null, favs = new Set(), current = null;
 const $ = s => document.querySelector(s);
 const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/[\s,]/g, ' ');
+const shortM = n => n >= 1e6 ? (n / 1e6) + ' mln' : Math.round(n / 1000) + ' ming';
+const priceText = v => !v.price_min ? '' : v.price_from ? shortM(+v.price_min) + ' so\'mdan' :
+  (+v.price_min === +(v.price_max || v.price_min) ? shortM(+v.price_min) : shortM(+v.price_min) + ' – ' + shortM(+v.price_max)) + ' so\'m';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const openUrl = url => tg && inTG ? tg.openLink(url) : window.open(url, '_blank');
 const openTg = url => tg && inTG ? tg.openTelegramLink(url) : window.open(url, '_blank');
@@ -176,7 +179,7 @@ function card(v) {
     <img loading="lazy" src="${img(v)}" alt="${esc(v.name)}" onerror="this.remove()">
     <div class="in">${favBtn(v)}
       <h3>${esc(v.name)}</h3>
-      <div class="meta">${v.district ? `<span>📍 ${esc(v.district)}</span>` : ''}${v.capacity ? `<span>👥 ${v.capacity} kishigacha</span>` : ''}${d !== null ? `<span class="dist">🚗 ${d.toFixed(1)} km</span>` : ''}</div>
+      <div class="meta">${v.district ? `<span>📍 ${esc(v.district)}</span>` : ''}${v.capacity ? `<span>👥 ${v.capacity} kishigacha</span>` : ''}${v.price_min ? `<span>💰 ${esc(priceText(v))}</span>` : ''}${d !== null ? `<span class="dist">🚗 ${d.toFixed(1)} km</span>` : ''}</div>
       <div class="addr">${esc(v.address || '')}</div>
     </div></div>`;
 }
@@ -220,8 +223,11 @@ function openVenue(id, keep) {
   const d = userPos && v.lat ? km(userPos[0], userPos[1], v.lat, v.lon) : null;
   const rows = [
     ['Tuman', v.district], ['Manzil', v.address], ['Sig\'imi', v.capacity ? v.capacity + ' kishigacha' : 'ma\'lumot yo\'q'],
-    ['Narx', v.price_note || 'to\'yxonaning o\'zidan so\'rang'], ['Telefon', v.phone || 'ma\'lumot yo\'q'], d !== null ? ['Masofa', d.toFixed(1) + ' km'] : null
+    ['Narx (1 kishi)', priceText(v) || 'ochiq manbada yo\'q — to\'yxonadan so\'rang'], ['Telefon', v.phone || 'ma\'lumot yo\'q'], d !== null ? ['Masofa', d.toFixed(1) + ' km'] : null
   ].filter(Boolean);
+  const capN = +v.capacity || 800, hasP = !!v.price_min;
+  const g0 = Math.min(300, capN), p0 = hasP ? +v.price_min : 300000;
+  const pHost = v.price_source ? (() => { try { return new URL(v.price_source).hostname.replace('www.', ''); } catch (e) { return ''; } })() : '';
   const src = (v.source_urls || []).slice(0, 3).map((u, i) => `<a href="#" data-url="${esc(u)}">manba ${i + 1}</a>`).join(' · ');
   $('#detail').innerHTML = `<div class="hero"><img src="${img(v)}" alt="" onerror="this.style.display='none'"><button class="close" id="dClose">✕</button></div>
    <div class="body">
@@ -233,6 +239,16 @@ function openVenue(id, keep) {
       <button class="btn ${favs.has(v.id) ? 'gold' : ''}" data-fav="${esc(v.id)}">${favs.has(v.id) ? '♥ Saqlangan' : '♡ Saqlash'}</button>
     </div>
     <div class="info">${rows.map(([k, val]) => `<div><span>${esc(k)}</span><b>${esc(val)}</b></div>`).join('')}</div>
+    ${hasP ? `<div class="note">${v.price_detail ? esc(v.price_detail) + '<br>' : ''}Narx manbasi: ${v.price_source ? `<a href="#" data-url="${esc(v.price_source)}" style="color:var(--gold)">${esc(pHost || 'manba')}</a>` : 'ochiq manba'}${v.price_date ? ', ' + esc(v.price_date) : ''}. Narxlar o'zgarishi mumkin.</div>` : ''}
+    <div class="box" style="margin-top:14px"><h2>🧮 Shu to'yxonada hisoblash</h2>
+      <label>Mehmonlar: <span class="val" id="vgV">${g0}</span>${+v.capacity ? ` <span style="font-weight:600">(sig'imi ${v.capacity})</span>` : ''}</label>
+      <input type="range" id="vg" min="50" max="${capN}" step="10" value="${g0}">
+      <label>Bir kishilik narx: <span class="val" id="vpV">${fmt(p0)}</span> so'm</label>
+      <input type="range" id="vp" min="100000" max="${Math.max(1000000, +v.price_max || 0)}" step="10000" value="${p0}">
+      ${hasP ? `<div class="btns" style="margin-top:8px">${[...new Set([+v.price_min, +(v.price_max || v.price_min)])].map(p => `<button class="btn" data-setp="${p}">${fmt(p)}</button>`).join('')}</div>` : ''}
+      <div class="total">Ovqat uchun taxminan<b id="vTot"></b></div>
+      <div class="note">${hasP ? 'Boshlang\'ich narx — manbada ko\'rsatilgani.' : 'Bu to\'yxonaning narxi ochiq manbalarda yo\'q — o\'zingiz bilgan narxni qo\'ying.'} Zal ijarasi, xizmat haqi va bezak alohida bo'lishi mumkin.</div>
+    </div>
     <div id="minimap"></div>
     <div class="btns">
       ${v.instagram ? `<button class="btn" data-url="https://instagram.com/${esc(v.instagram.replace('@', ''))}">📸 Instagram</button>` : ''}
@@ -252,6 +268,13 @@ function openVenue(id, keep) {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mini);
     L.marker([v.lat, v.lon], { icon: L.divIcon({ className: '', html: '<div class="pin"></div>', iconSize: [30, 30], iconAnchor: [15, 30] }) }).addTo(mini);
   }, 260);
+  const vCalc = () => {
+    $('#vgV').textContent = $('#vg').value; $('#vpV').textContent = fmt(+$('#vp').value);
+    $('#vTot').textContent = fmt(+$('#vg').value * +$('#vp').value) + ' so\'m';
+  };
+  $('#vg').oninput = vCalc; $('#vp').oninput = vCalc;
+  $('#detail').querySelectorAll('[data-setp]').forEach(b => b.onclick = () => { $('#vp').value = b.dataset.setp; vCalc(); haptic(); });
+  vCalc();
   $('#dClose').onclick = closeVenue;
   $('#dShare').onclick = () => shareVenue(v);
   $('#dErr').onclick = () => openTg(`https://t.me/${BOT}?start=err_${v.id}`);
